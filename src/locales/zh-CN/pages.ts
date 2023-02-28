@@ -1,7 +1,8 @@
 export default {
-  'pages.layouts.userLayout.title': 'Ant Design 是西湖区最具影响力的 Web 设计规范',
+  'pages.layouts.userLayout.title': 'Mouse性能平台',
+  'pages.layouts.userLayout.subTitle': 'mouse是一款分布式的开源压测平台，性能嘎嘎好~',
   'pages.login.accountLogin.tab': '账户密码登录',
-  'pages.login.accountLogin.errorMessage': '错误的用户名和密码(admin/ant.design)',
+  'pages.login.accountLogin.errorMessage': '错误的用户名和密码(tester/tester)',
   'pages.login.failure': '登录失败，请重试！',
   'pages.login.success': '登录成功！',
   'pages.login.username.placeholder': '用户名: admin or user',

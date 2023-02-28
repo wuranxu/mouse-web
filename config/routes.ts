@@ -23,9 +23,15 @@ export default [
     ],
   },
   {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
+    path: '/scene',
+    name: 'scene',
+    icon: 'experiment',
+    component: './Welcome',
+  },
+  {
+    path: '/report',
+    name: 'report',
+    icon: 'book',
     component: './Welcome',
   },
   {
@@ -53,7 +59,7 @@ export default [
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/scene',
   },
   {
     path: '*',

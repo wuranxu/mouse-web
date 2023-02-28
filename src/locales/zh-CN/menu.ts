@@ -1,5 +1,6 @@
 export default {
-  'menu.welcome': '欢迎',
+  'menu.scene': '场景列表',
+  'menu.report': '压测报告',
   'menu.more-blocks': '更多区块',
   'menu.home': '首页',
   'menu.admin': '管理页',

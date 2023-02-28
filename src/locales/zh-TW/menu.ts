@@ -1,5 +1,5 @@
 export default {
-  'menu.welcome': '歡迎',
+  'menu.scene': '場景列表',
   'menu.more-blocks': '更多區塊',
   'menu.home': '首頁',
   'menu.admin': '权限',

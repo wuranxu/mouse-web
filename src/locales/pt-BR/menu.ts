@@ -1,5 +1,5 @@
 export default {
-  'menu.welcome': 'Welcome',
+  'menu.scene': 'Scene List',
   'menu.more-blocks': 'More Blocks',
   'menu.home': 'Início',
   'menu.admin': 'Admin',
