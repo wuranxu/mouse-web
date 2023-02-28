@@ -1,6 +1,7 @@
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, HeartOutlined } from '@ant-design/icons';
 import { SelectLang as UmiSelectLang } from '@umijs/max';
-import React from 'react';
+import { useModel } from 'umi';
+import defaultSettings from '../../../config/defaultSettings';
 
 export type SiderTheme = 'light' | 'dark';
 
@@ -26,6 +27,31 @@ export const Question = () => {
       }}
     >
       <QuestionCircleOutlined />
+    </div>
+  );
+};
+
+export const SwitchTheme = () => {
+  const {initialState, setInitialState} = useModel("@@initialState");
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        height: 26,
+      }}
+      onClick={() => {
+        let theme = "realDark"
+        if (initialState?.settings.navTheme === 'realDark') {
+            theme = 'light'
+        }
+        setInitialState({
+          ...initialState,
+          settings: {...initialState.settings, navTheme: theme}
+        })
+      }}
+    >
+      <HeartOutlined />
     </div>
   );
 };
