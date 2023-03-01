@@ -24,15 +24,14 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser({
-        skipErrorHandler: true,
-      });
+      const msg = await queryCurrentUser();
       return msg.data;
     } catch (error) {
       history.push(loginPath);
     }
     return undefined;
   };
+  const theme = localStorage.getItem("mouse_theme") || 'light';
   // 如果不是登录页面，执行
   const { location } = history;
   if (location.pathname !== loginPath) {
@@ -40,17 +39,19 @@ export async function getInitialState(): Promise<{
     return {
       fetchUserInfo,
       currentUser,
-      settings: defaultSettings as Partial<LayoutSettings>,
+      settings: {...defaultSettings, navTheme: theme} as Partial<LayoutSettings>,
     };
   }
+
   return {
     fetchUserInfo,
-    settings: defaultSettings as Partial<LayoutSettings>,
+    settings: {...defaultSettings, navTheme: theme} as Partial<LayoutSettings>,
   };
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+
   return {
     actionsRender: () => [<SwitchTheme />, <Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {
@@ -63,7 +64,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     waterMarkProps: {
       content: initialState?.currentUser?.name,
     },
-    navTheme: initialState.settings.navTheme,
+    navTheme: initialState?.settings.navTheme,
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;

@@ -1,3 +1,4 @@
+import { Theme } from '@ant-design/cssinjs';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Moon, SunOne } from '@icon-park/react';
 import { SelectLang as UmiSelectLang } from '@umijs/max';
@@ -46,6 +47,7 @@ export const SwitchTheme = () => {
         if (initialState?.settings.navTheme === 'realDark') {
           theme = 'light';
         }
+        localStorage.setItem("mouse_theme", theme)
         setInitialState({
           ...initialState,
           settings: { ...initialState.settings, navTheme: theme },
