@@ -11,7 +11,7 @@ declare namespace API {
   type LoginResult = {
     code?: number;
     data?: CurrentUser;
-    message?: string;
+    msg?: string;
   };
 
   type PageParams = {

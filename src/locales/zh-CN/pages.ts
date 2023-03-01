@@ -1,5 +1,5 @@
 export default {
-  'pages.layouts.userLayout.title': 'Mouse性能平台',
+  'pages.layouts.userLayout.title': 'mouse是一款分布式的开源压测平台，性能嘎嘎好~',
   'pages.layouts.userLayout.subTitle': 'mouse是一款分布式的开源压测平台，性能嘎嘎好~',
   'pages.login.accountLogin.tab': '账户密码登录',
   'pages.login.accountLogin.errorMessage': '错误的用户名和密码(tester/tester)',
