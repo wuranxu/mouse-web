@@ -30,7 +30,7 @@ export default [
       {
         path: '/scene/list',
         name: '场景列表',
-        component: './Scene'
+        component: './Scene',
       },
       {
         path: '/scene/create',
@@ -73,7 +73,7 @@ export default [
   },
   {
     path: '/',
-    redirect: '/scene',
+    redirect: '/scene/list',
   },
   {
     path: '*',
