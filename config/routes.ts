@@ -26,7 +26,7 @@ export default [
     path: '/scene',
     name: 'scene',
     icon: 'experiment',
-    component: './Welcome',
+    component: './Scene',
   },
   {
     path: '/report',
