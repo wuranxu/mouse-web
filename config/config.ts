@@ -4,9 +4,12 @@ import { join } from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+
 
 const { REACT_APP_ENV = 'dev' } = process.env;
 
+// @ts-ignore
 export default defineConfig({
   /**
    * @name 开启 hash 模式
@@ -128,7 +131,7 @@ export default defineConfig({
    */
   headScripts: [
     // 解决首次加载时白屏的问题
-    { src: '/scripts/loading.js', async: true },
+    {src: '/scripts/loading.js', async: true},
   ],
   //================ pro 插件配置 =================
   presets: ['umi-presets-pro'],
@@ -153,6 +156,15 @@ export default defineConfig({
   ],
   mfsu: {
     strategy: 'normal',
+    // @ts-ignore
+    chainWebpack: (memo) => {
+      // 更多配置 https://github.com/Microsoft/monaco-editor-webpack-plugin#options
+      memo.plugin('monaco-editor-webpack-plugin').use(MonacoWebpackPlugin, [
+        // 按需配置
+        { languages: ['json', 'yaml'] }
+      ]);
+      return memo;
+    }
   },
   requestRecord: {},
 });

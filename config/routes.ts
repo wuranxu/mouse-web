@@ -24,10 +24,24 @@ export default [
   },
   {
     path: '/scene',
-    name: 'scene',
     icon: 'experiment',
-    component: './Scene',
+    name: '测试场景',
+    routes: [
+      {
+        path: '/scene/list',
+        name: '场景列表',
+        component: './Scene'
+      },
+      {
+        path: '/scene/create',
+        name: '添加场景',
+        icon: 'tool',
+        hideInMenu: true,
+        component: './Scene/Scene',
+      },
+    ],
   },
+
   {
     path: '/report',
     name: 'report',

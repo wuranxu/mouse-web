@@ -6,6 +6,7 @@ declare namespace API {
     name?: string;
     token?: string;
     email: string;
+    avatar?: string;
   };
 
   type LoginResult = {
