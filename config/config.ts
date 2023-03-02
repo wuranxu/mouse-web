@@ -1,13 +1,14 @@
 // https://umijs.org/config/
-import { defineConfig } from '@umijs/max';
-import { join } from 'path';
+import {defineConfig} from '@umijs/max';
+import {join} from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
+
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 
-const { REACT_APP_ENV = 'dev' } = process.env;
+const {REACT_APP_ENV = 'dev'} = process.env;
 
 // @ts-ignore
 export default defineConfig({
@@ -161,7 +162,9 @@ export default defineConfig({
       // 更多配置 https://github.com/Microsoft/monaco-editor-webpack-plugin#options
       memo.plugin('monaco-editor-webpack-plugin').use(MonacoWebpackPlugin, [
         // 按需配置
-        { languages: ['json', 'yaml'] }
+        {
+          languages: ['json', 'yaml'],
+        }
       ]);
       return memo;
     }
