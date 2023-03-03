@@ -1,10 +1,10 @@
 import SceneForm from '@/pages/Scene/components/SceneForm';
-import {Language} from '@/pages/Scene/types';
+import {Language, SceneProps} from '@/pages/Scene/types';
+import {ReloadOutlined, SaveOutlined} from '@ant-design/icons';
 import {PageContainer} from '@ant-design/pro-components';
-import {Card, Select, Space, Switch, Tabs} from 'antd';
+import {Button, Card, Form, Select, Space, Switch, Tabs} from 'antd';
 import React, {useState} from 'react';
 import SceneCode from './components/SceneCode';
-import type {SceneProps} from './components/SceneUI'
 import SceneUI from './components/SceneUI';
 
 enum SceneMode {
@@ -49,9 +49,20 @@ const Scene: React.FC = () => {
   const [mode, setMode] = useState<SceneMode>(SceneMode.UI);
   const [language, setLanguage] = useState<Language>('yaml');
   const [sceneData, setSceneData] = useState<SceneProps>({name: '', steps: []});
+  const [form] = Form.useForm();
 
+  const onSubmit = async () => {
+    const values = await form.validateFields()
+  }
+
+  // @ts-ignore
   return (
-    <PageContainer title={false} breadcrumb={undefined}>
+    <PageContainer title={false} breadcrumb={undefined} footer={[
+      <Button key="rest"><ReloadOutlined/> 重置</Button>,
+      <Button key="submit" type="primary" onClick={onSubmit}><SaveOutlined/>
+        提交
+      </Button>,
+    ]}>
       <Card>
         <Tabs
           tabBarExtraContent={
@@ -59,7 +70,7 @@ const Scene: React.FC = () => {
           }
         >
           <TabPane key="info" tab="场景信息">
-            <SceneForm key="sceneForm"/>
+            <SceneForm key="sceneForm" form={form}/>
           </TabPane>
           <TabPane key="detail" tab="场景流程">
             {mode === SceneMode.CODE ? (

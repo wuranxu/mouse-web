@@ -2,6 +2,7 @@ import * as monaco from 'monaco-editor';
 import Editor, {loader, OnChange} from '@monaco-editor/react';
 import React from 'react';
 import createDependencyProposals from "@/components/Code/suggestions";
+import {useModel} from "@@/exports";
 
 
 monaco.languages.registerCompletionItemProvider('yaml', {
@@ -24,17 +25,17 @@ interface MouseCodeEditorProps {
   height?: string | number;
   language?: 'yaml' | 'json';
   defaultValue?: string;
-  theme?: string;
   value?: string;
   onChange?: OnChange;
 }
 
 const MouseCodeEditor: React.FC<MouseCodeEditorProps> = (props) => {
+  const {initialState} = useModel("@@initialState");
 
   return (
     <Editor
       height={props.height}
-      theme={props.theme}
+      theme={initialState?.settings?.navTheme === 'light' ? 'vs-light' : 'vs-dark'}
       language={props.language}
       value={props.value}
       onChange={props.onChange}

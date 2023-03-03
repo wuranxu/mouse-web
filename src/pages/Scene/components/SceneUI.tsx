@@ -1,54 +1,74 @@
-import {CaretRightOutlined, PlusOutlined} from '@ant-design/icons';
-import {Button, Col, Collapse, Empty, Row, Space} from 'antd';
+import {CaretRightOutlined, CheckOutlined, CloseOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
+import {Button, Col, Collapse, Empty, Input, Row, Space} from 'antd';
 import React, {useState} from 'react';
 import './SceneUI.less';
 import EmptyScene from '@/assets/emptySearch.svg';
-import Postman, {PostmanProps, PostmanValue} from '@/components/Postman';
+import Postman from '@/components/Postman';
+import {SceneStep, SceneUIProps} from '../types';
 
 
 const Panel = Collapse.Panel;
 
-export interface SceneUIProps {
-  sceneData: SceneProps;
-  onChange: (data: SceneProps) => void;
+
+interface StepTitleProps {
+  title: string;
+  onChange: (title: string) => void
 }
 
-export interface SceneStep {
-  stepName: string;
-  request: PostmanProps;
-}
-
-export interface SceneProps {
-  name: string;
-  steps: SceneStep[];
+const StepTitle: React.FC<StepTitleProps> = ({title, onChange}) => {
+  const [editable, setEditable] = useState<boolean>(false);
+  const [value, setValue] = useState<string>(title);
+  return (
+    <div>
+      {
+        editable ?
+          <Space>
+            <Input size="small" onClick={e => {
+              e.stopPropagation();
+            }} placeholder="请输入步骤名称" defaultValue={value} onChange={e => setValue(e.target.value)}/>
+            <CheckOutlined onClick={e => {
+              e.stopPropagation()
+              setEditable(false)
+              onChange(value)
+            }}/>
+            <CloseOutlined onClick={(e) => {
+              e.stopPropagation();
+              setEditable(false)
+            }}/>
+          </Space> :
+          <span>{title} <EditOutlined onClick={(e) => {
+            e.stopPropagation();
+            setEditable(true)
+          }}/></span>
+      }
+    </div>
+  )
 }
 
 const SceneUI: React.FC<SceneUIProps> = ({sceneData, onChange}) => {
 
-  const [stepRequests, setStepRequests] = useState<PostmanProps[]>([]);
-
-  console.log(sceneData)
-
   const onCreateStep = () => {
-    const requests = [...stepRequests, {method: "GET", url: ''}]
-    const length = requests.length;
     const steps: SceneStep[] = [...sceneData.steps, {
-      stepName: '测试步骤',
-      request: {value: requests[length - 1] as PostmanValue}
+      stepName: `测试步骤-${sceneData.steps.length + 1}`,
+      request: {method: "GET", url: ''}
     }]
-    steps[steps.length - 1].request.onChange = (value: any) => {
-      const s = [...steps]
-      s[length - 1].request.value = value
-      onChange({
-        ...sceneData,
-        steps: s,
-      })
-    };
     onChange({
       ...sceneData,
       steps
     })
   }
+
+  console.log("form", sceneData)
+
+  const onChangeStepName = (idx: number, name: string) => {
+    const steps: SceneStep[] = [...sceneData.steps]
+    steps[idx].stepName = name
+    onChange({
+      ...sceneData,
+      steps
+    })
+  }
+
 
   return <>
     <Row gutter={8} style={{marginBottom: 12}}>
@@ -72,8 +92,10 @@ const SceneUI: React.FC<SceneUIProps> = ({sceneData, onChange}) => {
                   className="mouse-step"
                   expandIcon={({isActive}) => <CaretRightOutlined rotate={isActive ? 90 : 0}/>}
                 >
-                  <Panel header={step.stepName} key={step.stepName}>
-                    <Postman {...step.request}/>
+                  <Panel header={<StepTitle title={step.stepName} onChange={title => {
+                    onChangeStepName(index, title)
+                  }}/>} key={index.toString()}>
+                    <Postman value={step.request} sceneData={sceneData} index={index} onChange={onChange}/>
                   </Panel>
                 </Collapse>)
               }

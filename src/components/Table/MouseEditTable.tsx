@@ -3,23 +3,22 @@ import {EditableProTable} from '@ant-design/pro-components';
 import React, {useState} from 'react';
 
 
-
 export interface MouseEditableTableProps {
+  title?: string;
   columns: ProColumns[];
   dataSource: any[];
   setDataSource: (data: any[]) => void
 }
 
-const MouseEditTable: React.FC<MouseEditableTableProps> = ({columns, dataSource, setDataSource}) => {
+const MouseEditTable: React.FC<MouseEditableTableProps> = ({columns, title, dataSource, setDataSource}) => {
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
-  // const [dataSource, setDataSource] = useState<readonly DataSourceType[]>([]);
 
   // @ts-ignore
   return (
     <>
       <EditableProTable
         rowKey="id"
-        headerTitle="Query Params"
+        headerTitle={title}
         maxLength={5}
         recordCreatorProps={
           {
@@ -32,24 +31,16 @@ const MouseEditTable: React.FC<MouseEditableTableProps> = ({columns, dataSource,
           }
         }
         loading={false}
-        // toolBarRender={() => [
-        //   <ProFormRadio.Group
-        //     key="render"
-        //     fieldProps={{
-        //       value: position,
-        //       onChange: (e) => setPosition(e.target.value),
-        //     }}
-        //   />,
-        // ]}
         columns={columns}
         value={dataSource}
+        // @ts-ignore
         onChange={setDataSource}
         editable={{
           type: 'multiple',
           editableKeys,
           onSave: async (rowKey, data, row) => {
-            console.log(dataSource)
-            console.log(data, row)
+            // console.log(dataSource)
+            // console.log(data, row)
           },
           onChange: setEditableRowKeys,
         }}
