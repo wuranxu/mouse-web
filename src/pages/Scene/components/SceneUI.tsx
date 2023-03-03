@@ -1,4 +1,11 @@
-import {CaretRightOutlined, CheckOutlined, CloseOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
+import {
+  CaretRightOutlined,
+  CheckOutlined,
+  CloseOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined
+} from '@ant-design/icons';
 import {Button, Col, Collapse, Empty, Input, Row, Space} from 'antd';
 import React, {useState} from 'react';
 import './SceneUI.less';
@@ -92,7 +99,16 @@ const SceneUI: React.FC<SceneUIProps> = ({sceneData, onChange}) => {
                   className="mouse-step"
                   expandIcon={({isActive}) => <CaretRightOutlined rotate={isActive ? 90 : 0}/>}
                 >
-                  <Panel header={<StepTitle title={step.stepName} onChange={title => {
+                  <Panel
+                    extra={<DeleteOutlined style={{color: 'rgb(249,57,32)'}} key={`remove-${index}`} onClick={e => {
+                      e.stopPropagation();
+                      const steps = [...sceneData.steps]
+                      steps.splice(index, 1)
+                      onChange({
+                        ...sceneData,
+                        steps
+                      })
+                    }}/>} header={<StepTitle title={step.stepName} onChange={title => {
                     onChangeStepName(index, title)
                   }}/>} key={index.toString()}>
                     <Postman value={step.request} sceneData={sceneData} index={index} onChange={onChange}/>

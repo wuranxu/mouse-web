@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {DataSourceType} from "@/components/Postman/components/types";
 import MouseCodeEditor from "@/components/Code/MouseCodeEditor";
 import {OnChange} from "@monaco-editor/react";
-import EmptyBody from '@/assets/waiting.svg';
+import EmptyBody from "@/assets/waiting.svg";
 import {ProColumns} from "@ant-design/pro-components";
 import MouseEditTable from "@/components/Table/MouseEditTable";
 
