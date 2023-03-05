@@ -1,8 +1,8 @@
 import { Theme } from '@ant-design/cssinjs';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { Moon, SunOne } from '@icon-park/react';
 import { SelectLang as UmiSelectLang } from '@umijs/max';
 import { useModel } from 'umi';
+import IconFont from "@/components/Icon/IconFont";
 
 export type SiderTheme = 'light' | 'dark';
 
@@ -39,8 +39,7 @@ export const SwitchTheme = () => {
     <div
       style={{
         display: 'flex',
-        height: 56,
-        lineHeight: '56px',
+        height: 26,
       }}
       onClick={() => {
         let theme = 'realDark';
@@ -55,9 +54,10 @@ export const SwitchTheme = () => {
       }}
     >
       {initialState?.settings.navTheme === 'light' ? (
-        <Moon theme="filled" size={22} fill="#4a4a4a" />
+        <IconFont type='icon-moon-copy'/>
+        // <Moon theme="filled" size={22} fill="#4a4a4a" />
       ) : (
-        <SunOne theme="filled" size={22} fill="#f8e71c" />
+        <IconFont type='icon-sun-copy'/>
       )}
     </div>
   );

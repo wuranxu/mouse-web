@@ -11,7 +11,7 @@ export interface BodyProps {
   body?: string;
   setBody: (value: string) => void | OnChange;
   setHeaders: (headers: DataSourceType[]) => void
-  headers: DataSourceType[];
+  headers?: DataSourceType[];
 }
 
 const Body: React.FC<BodyProps> = ({body, setBody, headers, setHeaders}) => {
@@ -92,7 +92,7 @@ const Body: React.FC<BodyProps> = ({body, setBody, headers, setHeaders}) => {
     if (value === 1) {
       return;
     }
-    const hd = [...headers]
+    const hd = headers !== undefined ? [...headers]: []
     const idx = hd.findIndex(item => item.key.toLowerCase() === 'content-type')
     let headerValue;
     if (value === 2) {
@@ -114,7 +114,7 @@ const Body: React.FC<BodyProps> = ({body, setBody, headers, setHeaders}) => {
   }, [value])
 
   useEffect(() => {
-    if (!body) {
+    if (!body || !headers) {
       return;
     }
     const idx = headers.findIndex(item => item.key.toLowerCase() === 'content-type')

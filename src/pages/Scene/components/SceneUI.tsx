@@ -6,12 +6,12 @@ import {
   EditOutlined,
   PlusOutlined
 } from '@ant-design/icons';
-import {Button, Col, Collapse, Empty, Input, Row, Space} from 'antd';
-import React, {useState} from 'react';
+import { Button, Col, Collapse, Empty, Input, Row, Space } from 'antd';
+import React, { useState } from 'react';
 import './SceneUI.less';
 import EmptyScene from '@/assets/emptySearch.svg';
 import Postman from '@/components/Postman';
-import {SceneStep, SceneUIProps} from '../types';
+import { SceneStep, SceneUIProps } from '../types';
 
 
 const Panel = Collapse.Panel;
@@ -22,7 +22,7 @@ interface StepTitleProps {
   onChange: (title: string) => void
 }
 
-const StepTitle: React.FC<StepTitleProps> = ({title, onChange}) => {
+const StepTitle: React.FC<StepTitleProps> = ({ title, onChange }) => {
   const [editable, setEditable] = useState<boolean>(false);
   const [value, setValue] = useState<string>(title);
   return (
@@ -32,32 +32,40 @@ const StepTitle: React.FC<StepTitleProps> = ({title, onChange}) => {
           <Space>
             <Input size="small" onClick={e => {
               e.stopPropagation();
-            }} placeholder="请输入步骤名称" defaultValue={value} onChange={e => setValue(e.target.value)}/>
+            }} placeholder="请输入步骤名称" defaultValue={value}
+              onPressEnter={e => {
+                e.stopPropagation();
+                setEditable(false)
+                onChange(value)
+              }}
+              onChange={e => setValue(e.target.value)} />
             <CheckOutlined onClick={e => {
               e.stopPropagation()
               setEditable(false)
               onChange(value)
-            }}/>
+            }} />
             <CloseOutlined onClick={(e) => {
               e.stopPropagation();
               setEditable(false)
-            }}/>
+            }} />
           </Space> :
           <span>{title} <EditOutlined onClick={(e) => {
             e.stopPropagation();
             setEditable(true)
-          }}/></span>
+          }} /></span>
       }
     </div>
   )
 }
 
-const SceneUI: React.FC<SceneUIProps> = ({sceneData, onChange}) => {
+const SceneUI: React.FC<SceneUIProps> = ({ sceneData, onChange }) => {
 
   const onCreateStep = () => {
     const steps: SceneStep[] = [...sceneData.steps, {
       stepName: `测试步骤-${sceneData.steps.length + 1}`,
-      request: {method: "GET", url: ''}
+      request: { method: "GET", url: '' },
+      check: [],
+      out: []
     }]
     onChange({
       ...sceneData,
@@ -78,10 +86,10 @@ const SceneUI: React.FC<SceneUIProps> = ({sceneData, onChange}) => {
 
 
   return <>
-    <Row gutter={8} style={{marginBottom: 12}}>
+    <Row gutter={8} style={{ marginBottom: 12 }}>
       <Col span={8}>
         <Button type="primary" onClick={onCreateStep}>
-          <PlusOutlined/> 添加步骤
+          <PlusOutlined /> 添加步骤
         </Button>
       </Col>
     </Row>
@@ -89,7 +97,7 @@ const SceneUI: React.FC<SceneUIProps> = ({sceneData, onChange}) => {
       <Col span={24}>
         {
           sceneData.steps.length === 0 ?
-            <Empty image={EmptyScene} imageStyle={{height: 240}} description="还没有任何测试步骤哦，快添加一个叭~"/> :
+            <Empty image={EmptyScene} imageStyle={{ height: 240 }} description="还没有任何测试步骤哦，快添加一个叭~" /> :
             <Space direction="vertical" className="mouse-ui">
               {
                 sceneData.steps.map((step, index) => <Collapse
@@ -97,10 +105,10 @@ const SceneUI: React.FC<SceneUIProps> = ({sceneData, onChange}) => {
                   collapsible="header"
                   defaultActiveKey={['1']}
                   className="mouse-step"
-                  expandIcon={({isActive}) => <CaretRightOutlined rotate={isActive ? 90 : 0}/>}
+                  expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                 >
                   <Panel
-                    extra={<DeleteOutlined style={{color: 'rgb(249,57,32)'}} key={`remove-${index}`} onClick={e => {
+                    extra={<DeleteOutlined style={{ color: 'rgb(249,57,32)' }} key={`remove-${index}`} onClick={e => {
                       e.stopPropagation();
                       const steps = [...sceneData.steps]
                       steps.splice(index, 1)
@@ -108,10 +116,10 @@ const SceneUI: React.FC<SceneUIProps> = ({sceneData, onChange}) => {
                         ...sceneData,
                         steps
                       })
-                    }}/>} header={<StepTitle title={step.stepName} onChange={title => {
-                    onChangeStepName(index, title)
-                  }}/>} key={index.toString()}>
-                    <Postman value={step.request} sceneData={sceneData} index={index} onChange={onChange}/>
+                    }} />} header={<StepTitle title={step.stepName} onChange={title => {
+                      onChangeStepName(index, title)
+                    }} />} key={index.toString()}>
+                    <Postman value={step.request} sceneData={sceneData} index={index} onChange={onChange} />
                   </Panel>
                 </Collapse>)
               }

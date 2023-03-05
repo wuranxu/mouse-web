@@ -6,7 +6,7 @@ import React, {useState} from 'react';
 export interface MouseEditableTableProps {
   title?: string;
   columns: ProColumns[];
-  dataSource: any[];
+  dataSource?: any[];
   setDataSource: (data: any[]) => void
 }
 

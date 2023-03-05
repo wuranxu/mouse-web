@@ -1,18 +1,21 @@
-import {Card} from "antd";
-import React from "react";
 import MouseCodeEditor from "@/components/Code/MouseCodeEditor";
-import {Language} from "../types";
+import { OnChange } from "@monaco-editor/react";
+import { Card } from "antd";
+import React from "react";
+import { Language } from "../types";
 
 
-interface SceneCodeType {
+export interface SceneCodeType {
   language?: Language;
+  value?: string;
+  onChange?: OnChange;
 }
 
-const SceneCode: React.FC<SceneCodeType> = ({language}) => {
+const SceneCode: React.FC<SceneCodeType> = ({ language, value, onChange }) => {
 
   return (
-    <Card bodyStyle={{padding: 0}} bordered={false}>
-      <MouseCodeEditor height={500} language={language}/>
+    <Card bodyStyle={{ padding: 0 }} bordered={false}>
+      <MouseCodeEditor height={500} language={language} value={value} onChange={onChange} />
     </Card>
   )
 }
