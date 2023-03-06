@@ -7,11 +7,10 @@ export interface DataSourceType {
 }
 
 
-
 export interface VariableSourceType {
   id: React.Key;
   // name: string;
-  from: "Response" | "RequestHeader" | "ResponseHeader" | "StatusCode";
+  from: "Response" | "RequestHeader" | "ResponseHeader" | "Cookie" | "StatusCode";
   extractType: "Regex" | "JSONPath";
   expression: string;
   variable: string;

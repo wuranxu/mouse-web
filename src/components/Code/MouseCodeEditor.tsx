@@ -51,6 +51,7 @@ const MouseCodeEditor: React.FC<MouseCodeEditorProps> = (props) => {
         </Tooltip>
         <Tooltip title="点击可清空代码">
           <ClearOutlined style={iconStyles} onClick={() => {
+            // @ts-ignore
             props?.onChange("")
           }} />
         </Tooltip>

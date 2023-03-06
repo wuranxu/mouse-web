@@ -1,12 +1,13 @@
 import SceneForm from '@/pages/Scene/components/SceneForm';
-import { Language, SceneProps, SceneStep } from '@/pages/Scene/types';
-import { ReloadOutlined, SaveOutlined } from '@ant-design/icons';
-import { PageContainer } from '@ant-design/pro-components';
-import { Button, Card, Form, message, Select, Space, Switch, Tabs } from 'antd';
-import React, { useState } from 'react';
-import { parse, stringify } from 'yaml';
+import {Language, SceneProps, SceneStep} from '@/pages/Scene/types';
+import {FunctionOutlined, NodeIndexOutlined, SaveOutlined} from '@ant-design/icons';
+import {PageContainer} from '@ant-design/pro-components';
+import {Button, Card, Form, message, Select, Space, Switch, Tabs} from 'antd';
+import React, {useState} from 'react';
+import {parse, stringify} from 'yaml';
 import SceneCode from './components/SceneCode';
 import SceneUI from './components/SceneUI';
+import SceneVars from "@/pages/Scene/components/SceneVars";
 
 
 enum SceneMode {
@@ -14,15 +15,15 @@ enum SceneMode {
   CODE,
 }
 
-const { TabPane } = Tabs;
+const {TabPane} = Tabs;
 
-const UISwitch = ({ mode, setMode, language, setLanguage }: any) => {
+const UISwitch = ({mode, setMode, language, setLanguage}: any) => {
   return (
     <Space>
       {mode === SceneMode.CODE ? (
         <Select
           value={language}
-          style={{ width: 120 }}
+          style={{width: 120}}
           size="small"
           onChange={(e) => setLanguage(e)}
         >
@@ -50,14 +51,15 @@ const UISwitch = ({ mode, setMode, language, setLanguage }: any) => {
 const Scene: React.FC = () => {
   const [mode, setMode] = useState<SceneMode>(SceneMode.UI);
   const [language, setLanguage] = useState<Language>('yaml');
-  const [sceneData, setSceneData] = useState<SceneProps>({ name: '', steps: [], sceneType: 'HTTP' });
+  const [varDrawer, setVarDrawer] = useState<boolean>(false);
+  const [sceneData, setSceneData] = useState<SceneProps>({name: '', steps: [], sceneType: 'HTTP'});
   const [sceneCode, setSceneCode] = useState<string>();
   const [form] = Form.useForm();
 
   const onSubmit = async () => {
     try {
       await form.validateFields()
-    } catch (e) {   
+    } catch (e) {
       const errs = form.getFieldsError()
       for (const err of errs) {
         if (err.errors.length > 0) {
@@ -71,7 +73,7 @@ const Scene: React.FC = () => {
   }
 
   const onSave = () => {
-    
+
   }
 
   const convertToCode = (method: Function) => {
@@ -88,7 +90,7 @@ const Scene: React.FC = () => {
   }
 
   const removeId = (obj: Record<string, any>) => {
-    const { id: _, index, key, value, ...newObj } = obj;
+    const {id: _, index, key, value, ...newObj} = obj;
     return newObj;
   }
 
@@ -137,12 +139,14 @@ const Scene: React.FC = () => {
   // @ts-ignore
   return (
     <PageContainer title={false} breadcrumb={undefined} footer={[
-      <Button key="rest"><ReloadOutlined /> 重置</Button>,
-      <Button key="submit" type="primary" onClick={onSubmit}><SaveOutlined />
+      <Button key="vars" onClick={() => setVarDrawer(true)}><NodeIndexOutlined /> 变量列表</Button>,
+      <Button key="function"><FunctionOutlined/> 基础函数</Button>,
+      <Button key="submit" type="primary" onClick={onSubmit}><SaveOutlined/>
         提交
       </Button>,
     ]}>
       <Card>
+        <SceneVars open={varDrawer} onChange={setVarDrawer} steps={sceneData.steps} width={720}/>
         <Tabs
           tabBarExtraContent={
             <UISwitch setMode={(md: SceneMode) => {
@@ -154,16 +158,16 @@ const Scene: React.FC = () => {
               } else {
                 convertToUI(uiMethod);
               }
-            }} mode={mode} language={language} setLanguage={switchLang} />
+            }} mode={mode} language={language} setLanguage={switchLang}/>
           }>
           <TabPane key="info" tab="场景信息">
-            <SceneForm key="sceneForm" form={form} sceneData={sceneData} setSceneData={setSceneData} />
+            <SceneForm key="sceneForm" form={form} sceneData={sceneData} setSceneData={setSceneData}/>
           </TabPane>
           <TabPane key="detail" tab="场景流程">
             {mode === SceneMode.CODE ? (
-              <SceneCode key="code" language={language} value={sceneCode} onChange={setSceneCode} />
+              <SceneCode key="code" language={language} value={sceneCode} onChange={setSceneCode}/>
             ) : (
-              <SceneUI key="sceneUI" sceneData={sceneData} onChange={setSceneData} />
+              <SceneUI key="sceneUI" sceneData={sceneData} onChange={setSceneData}/>
             )}
           </TabPane>
         </Tabs>
