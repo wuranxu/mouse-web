@@ -1,10 +1,8 @@
-import { Theme } from '@ant-design/cssinjs';
-import { QuestionCircleOutlined } from '@ant-design/icons';
-import { SelectLang as UmiSelectLang } from '@umijs/max';
-import { useModel } from 'umi';
+import {QuestionCircleOutlined} from '@ant-design/icons';
+import {SelectLang as UmiSelectLang} from '@umijs/max';
+import {useModel} from 'umi';
 import IconFont from "@/components/Icon/IconFont";
 
-export type SiderTheme = 'light' | 'dark';
 
 export const SelectLang = () => {
   return (
@@ -27,14 +25,15 @@ export const Question = () => {
         window.open('https://pro.ant.design/docs/getting-started');
       }}
     >
-      <QuestionCircleOutlined />
+      <QuestionCircleOutlined/>
     </div>
   );
 };
 
 export const SwitchTheme = () => {
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const {initialState, setInitialState} = useModel('@@initialState');
 
+  // @ts-ignore
   return (
     <div
       style={{
@@ -49,7 +48,7 @@ export const SwitchTheme = () => {
         localStorage.setItem("mouse_theme", theme)
         setInitialState({
           ...initialState,
-          settings: { ...initialState.settings, navTheme: theme },
+          settings: {...initialState.settings, navTheme: theme},
         });
       }}
     >

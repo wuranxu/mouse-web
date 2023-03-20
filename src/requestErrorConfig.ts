@@ -90,7 +90,7 @@ export const errorConfig: RequestConfig = {
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
       const url = config?.url;
-      return { ...config, url };
+      return { ...config, url, credentials: 'include' };
     },
   ],
 
@@ -100,8 +100,8 @@ export const errorConfig: RequestConfig = {
       // 拦截响应数据，进行个性化处理
       const { data } = response as unknown as ResponseStructure;
 
-      if (data?.success === false) {
-        message.error('请求失败！');
+      if (data?.code !== 0) {
+        message.error(data?.msg || 'operate failed');
       }
       return response;
     },

@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Col, Divider, Input, Row, Space, Table, Tooltip} from 'antd';
 import type {ColumnsType} from 'antd/es/table';
 import {FormattedMessage, history} from "@umijs/max";
 import {PlusOutlined, QuestionCircleOutlined} from "@ant-design/icons";
+import {listScene} from "@/services/scene";
 
 // scene type
 enum SceneType {
@@ -20,7 +21,7 @@ interface Scene {
 }
 
 const SceneList: React.FC = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Scene[]>([]);
 
   const columns: ColumnsType<Scene> = [
     {
@@ -58,6 +59,17 @@ const SceneList: React.FC = () => {
       </>
     }
   ]
+
+  const onFetchSceneList = async () => {
+    const resp = await listScene();
+    if (resp.code === 0) {
+      setData(resp.data as Scene[])
+    }
+  }
+
+  useEffect(() => {
+    onFetchSceneList()
+  }, [])
 
   return (
     <>

@@ -8,6 +8,7 @@ import {parse, stringify} from 'yaml';
 import SceneCode from './components/SceneCode';
 import SceneUI from './components/SceneUI';
 import SceneVars from "@/pages/Scene/components/SceneVars";
+import {createScene} from "@/services/scene";
 
 
 enum SceneMode {
@@ -53,27 +54,43 @@ const Scene: React.FC = () => {
   const [language, setLanguage] = useState<Language>('yaml');
   const [varDrawer, setVarDrawer] = useState<boolean>(false);
   const [sceneData, setSceneData] = useState<SceneProps>({name: '', steps: [], sceneType: 'HTTP'});
-  const [sceneCode, setSceneCode] = useState<string>();
+  const [sceneCode, setSceneCode] = useState<string>('{}');
   const [form] = Form.useForm();
 
+  const onSave = async (values: Record<string, any>) => {
+    let steps, data;
+    if (mode === SceneMode.UI) {
+      steps = JSON.stringify(sceneData.steps)
+      data = {...values, steps}
+    } else {
+      if (language === 'yaml') {
+        data = parse(sceneCode)
+      } else {
+        data = JSON.parse(sceneCode)
+      }
+    }
+    // onSave data
+    const resp = await createScene(data)
+    if (resp.code === 0) {
+      message.success(resp.msg);
+    }
+  }
+
   const onSubmit = async () => {
+    let values;
     try {
-      await form.validateFields()
+      values = await form.validateFields()
     } catch (e) {
       const errs = form.getFieldsError()
       for (const err of errs) {
         if (err.errors.length > 0) {
-          console.log(err.errors[0].toString())
           message.info(err.errors[0].toString())
           return
         }
       }
     }
     // save
-  }
-
-  const onSave = () => {
-
+    await onSave(values)
   }
 
   const convertToCode = (method: Function) => {
@@ -137,9 +154,10 @@ const Scene: React.FC = () => {
   }
 
   // @ts-ignore
+  // @ts-ignore
   return (
     <PageContainer title={false} breadcrumb={undefined} footer={[
-      <Button key="vars" onClick={() => setVarDrawer(true)}><NodeIndexOutlined /> 变量列表</Button>,
+      <Button key="vars" onClick={() => setVarDrawer(true)}><NodeIndexOutlined/> 变量列表</Button>,
       <Button key="function"><FunctionOutlined/> 基础函数</Button>,
       <Button key="submit" type="primary" onClick={onSubmit}><SaveOutlined/>
         提交
@@ -165,6 +183,7 @@ const Scene: React.FC = () => {
           </TabPane>
           <TabPane key="detail" tab="场景流程">
             {mode === SceneMode.CODE ? (
+              // @ts-ignore
               <SceneCode key="code" language={language} value={sceneCode} onChange={setSceneCode}/>
             ) : (
               <SceneUI key="sceneUI" sceneData={sceneData} onChange={setSceneData}/>
