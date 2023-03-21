@@ -39,9 +39,15 @@ export default [
         hideInMenu: true,
         component: './Scene/Scene',
       },
+      {
+        path: '/scene/:sceneId',
+        name: '编辑场景',
+        icon: 'tool',
+        hideInMenu: true,
+        component: './Scene/Scene',
+      },
     ],
   },
-
   {
     path: '/report',
     name: 'report',
@@ -64,12 +70,6 @@ export default [
         component: './Admin',
       },
     ],
-  },
-  {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
   },
   {
     path: '/',

@@ -3,12 +3,13 @@ import {Language, SceneProps, SceneStep} from '@/pages/Scene/types';
 import {FunctionOutlined, NodeIndexOutlined, SaveOutlined} from '@ant-design/icons';
 import {PageContainer} from '@ant-design/pro-components';
 import {Button, Card, Form, message, Select, Space, Switch, Tabs} from 'antd';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {parse, stringify} from 'yaml';
 import SceneCode from './components/SceneCode';
 import SceneUI from './components/SceneUI';
 import SceneVars from "@/pages/Scene/components/SceneVars";
-import {createScene} from "@/services/scene";
+import {createScene, queryScene} from "@/services/scene";
+import {useParams} from '@umijs/max';
 
 
 enum SceneMode {
@@ -57,17 +58,50 @@ const Scene: React.FC = () => {
   const [sceneCode, setSceneCode] = useState<string>('{}');
   const [form] = Form.useForm();
 
+  const params = useParams();
+
+  const onChangeCode = (code: string) => {
+    try {
+      let data;
+      if (language === 'yaml') {
+        data = parse(code)
+      } else {
+        data = JSON.parse(code)
+      }
+      form.setFieldsValue(data)
+    } catch (e) {
+      console.log("invalid code")
+    }
+  }
+
   const onSave = async (values: Record<string, any>) => {
     let steps, data;
     if (mode === SceneMode.UI) {
       steps = JSON.stringify(sceneData.steps)
       data = {...values, steps}
     } else {
-      if (language === 'yaml') {
-        data = parse(sceneCode)
-      } else {
-        data = JSON.parse(sceneCode)
+      try {
+        if (language === 'yaml') {
+          data = parse(sceneCode)
+        } else {
+          data = JSON.parse(sceneCode)
+        }
+      } catch (e) {
+        message.warning("数据不合法, 请检查");
+        return
       }
+      if (!data.name) {
+        message.info("场景名称不能为空");
+        return;
+      }
+      if (!data.sceneType) {
+        message.info("场景类型不能为空");
+        return;
+      }
+    }
+    if (data.steps === undefined || data.steps.length === 0) {
+      message.info("场景步骤不能为空");
+      return;
     }
     // onSave data
     const resp = await createScene(data)
@@ -153,16 +187,33 @@ const Scene: React.FC = () => {
 
   }
 
-  // @ts-ignore
-  // @ts-ignore
+  const onQueryScene = async (sceneId: number | string) => {
+    const resp = await queryScene({sceneId})
+    if (resp.code === 0) {
+      const steps = JSON.parse(resp?.data?.steps)
+      const data = {name: resp?.data?.name, steps, sceneType: resp?.data?.sceneType}
+      form.setFieldsValue(data)
+      setSceneData(data)
+    }
+  }
+
+  useEffect(() => {
+    if (params.sceneId) {
+      // 说明是编辑模式 查询场景数据
+      onQueryScene(params.sceneId)
+    }
+  }, [])
+
   return (
-    <PageContainer title={false} breadcrumb={undefined} footer={[
-      <Button key="vars" onClick={() => setVarDrawer(true)}><NodeIndexOutlined/> 变量列表</Button>,
-      <Button key="function"><FunctionOutlined/> 基础函数</Button>,
-      <Button key="submit" type="primary" onClick={onSubmit}><SaveOutlined/>
-        提交
-      </Button>,
-    ]}>
+    <PageContainer title={false} breadcrumb={{}} footer={
+      window.location.pathname.indexOf("/scene/") > -1 && window.location.pathname.indexOf("/scene/list") === -1 ?
+        [
+          <Button key="vars" onClick={() => setVarDrawer(true)}><NodeIndexOutlined/> 变量列表</Button>,
+          <Button key="function"><FunctionOutlined/> 基础函数</Button>,
+          <Button key="submit" type="primary" onClick={onSubmit}><SaveOutlined/>
+            提交
+          </Button>,
+        ] : []}>
       <Card>
         <SceneVars open={varDrawer} onChange={setVarDrawer} steps={sceneData.steps} width={720}/>
         <Tabs
@@ -184,8 +235,12 @@ const Scene: React.FC = () => {
           <TabPane key="detail" tab="场景流程">
             {mode === SceneMode.CODE ? (
               // @ts-ignore
-              <SceneCode key="code" language={language} value={sceneCode} onChange={setSceneCode}/>
+              <SceneCode key="code" language={language} value={sceneCode} onChange={(code: string) => {
+                setSceneCode(code)
+                onChangeCode(code)
+              }}/>
             ) : (
+              // @ts-ignore
               <SceneUI key="sceneUI" sceneData={sceneData} onChange={setSceneData}/>
             )}
           </TabPane>

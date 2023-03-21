@@ -9,7 +9,9 @@ const Scene: React.FC = () => {
 
   return (
     <PageContainer
-      title={intl.formatMessage({id: 'scene.list.title', defaultMessage: '场景列表'})}
+      breadcrumb={{}}
+      title={false}
+      // title={intl.formatMessage({id: 'scene.list.title', defaultMessage: '场景列表'})}
     >
       <Card>
         <SceneList/>
